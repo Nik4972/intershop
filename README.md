@@ -19,21 +19,8 @@
 5. Заполнить таблицы тестовыми данными
    mysql -uroot -p Baza2015<tovar.sql
 
-6. Настроить виртуальный хост Apache. Для этого создать в папках
-   /etc/apache2/sites-available и  /etc/apache2/sites-enabled файл конфигурации
-   inter.loc.conf со следующим содержимым: 
-
-<VirtualHost *:80>
-  ServerName inter.loc
-  DocumentRoot "/var/www/html/intershop/web"
-  <Directory "/var/www/html/intershop/web">
-    RewriteEngine on
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule . index.php
-    AllowOverride all
-  </Directory>
-</VirtualHost>
+6. Настроить виртуальный хост Apache. Для этого скопировать inter.loc.conf в папки
+   /etc/apache2/sites-available и  /etc/apache2/sites-enabled  
 
 7. В /etc/hosts прописать созданный хост
    127.0.0.1 inter.loc
