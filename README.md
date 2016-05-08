@@ -1,102 +1,45 @@
-Yii 2 Basic Project Template
-============================
+Интернет-магазин на Yii2
+************************
 
-Yii 2 Basic Project Template is a skeleton [Yii 2](http://www.yiiframework.com/) application best for
-rapidly creating small projects.
+Порядок установки для Ubuntu 15.10
 
-The template contains the basic features including user login/logout and a contact page.
-It includes all commonly used configurations that would allow you to focus on adding new
-features to your application.
-
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii2-app-basic/v/stable.png)](https://packagist.org/packages/yiisoft/yii2-app-basic)
-[![Total Downloads](https://poser.pugx.org/yiisoft/yii2-app-basic/downloads.png)](https://packagist.org/packages/yiisoft/yii2-app-basic)
-[![Build Status](https://travis-ci.org/yiisoft/yii2-app-basic.svg?branch=master)](https://travis-ci.org/yiisoft/yii2-app-basic)
-
-DIRECTORY STRUCTURE
--------------------
-
-      assets/             contains assets definition
-      commands/           contains console commands (controllers)
-      config/             contains application configurations
-      controllers/        contains Web controller classes
-      mail/               contains view files for e-mails
-      models/             contains model classes
-      runtime/            contains files generated during runtime
-      tests/              contains various tests for the basic application
-      vendor/             contains dependent 3rd-party packages
-      views/              contains view files for the Web application
-      web/                contains the entry script and Web resources
-
-
-
-REQUIREMENTS
-------------
-
-The minimum requirement by this project template that your Web server supports PHP 5.4.0.
-
-
-INSTALLATION
-------------
-
-### Install from an Archive File
-
-Extract the archive file downloaded from [yiiframework.com](http://www.yiiframework.com/download/) to
-a directory named `basic` that is directly under the Web root.
-
-Set cookie validation key in `config/web.php` file to some random secret string:
-
-```php
-'request' => [
-    // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-    'cookieValidationKey' => '<secret random string goes here>',
-],
-```
-
-You can then access the application through the following URL:
-
-~~~
-http://localhost/basic/web/
-~~~
-
-
-### Install via Composer
-
-If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
-at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
-
-You can then install this project template using the following command:
-
-~~~
-php composer.phar global require "fxp/composer-asset-plugin:~1.1.1"
-php composer.phar create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic basic
-~~~
-
-Now you should be able to access the application through the following URL, assuming `basic` is the directory
-directly under the Web root.
-
-~~~
-http://localhost/basic/web/
-~~~
-
-
-CONFIGURATION
--------------
-
-### Database
-
-Edit the file `config/db.php` with real data, for example:
-
-```php
-return [
+1. Скачать архив с проектом в папку с именем, например, /var/www/hrml/intershop
+2. Создать в mysql базу данных, например Baza2015
+3. Настроить в файле проекта /config/db.php  параметры соединения с БД.
+   return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
+    'dsn' => 'mysql:host=localhost;dbname=Baza2015',
     'username' => 'root',
-    'password' => '1234',
+    'password' => '********',
     'charset' => 'utf8',
-];
-```
+   ];
+4. Создать необходимые таблицы, выполнив ранее подготовленную миграцию
+   php yii migrate
 
-**NOTES:**
-- Yii won't create the database for you, this has to be done manually before you can access it.
-- Check and edit the other files in the `config/` directory to customize your application as required.
-- Refer to the README in the `tests` directory for information specific to basic application tests.
+5. Заполнить таблицы тестовыми данными
+   mysql -uroot -p Baza2015<tovar.sql
+
+6. Настроить виртуальный хост Apache. Для этого создать в папках
+   /etc/apache2/sites-available и  /etc/apache2/sites-enabled файл конфигурации
+   inter.loc.conf со следующим содержимым: 
+
+<VirtualHost *:80>
+  ServerName inter.loc
+  DocumentRoot "/var/www/html/intershop/web"
+  <Directory "/var/www/html/intershop/web">
+    RewriteEngine on
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . index.php
+    AllowOverride all
+  </Directory>
+</VirtualHost>
+
+7. В /etc/hosts прописать созданный хост
+   127.0.0.1 inter.loc
+
+8. Перезагрузить Apache
+   service apache2 restart
+
+9. Проект настроен и доступен в броузере по адресу inter.loc
+
